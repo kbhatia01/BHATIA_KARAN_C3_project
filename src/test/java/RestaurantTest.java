@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,23 +25,22 @@ class RestaurantTest {
     public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
         Restaurant hotel = Mockito.spy(restaurant);
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("11:30:00"));
-        assertEquals(true,hotel.isRestaurantOpen());
+        assertTrue(hotel.isRestaurantOpen());
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("10:30:00"));
-        assertEquals(true,hotel.isRestaurantOpen());
+        assertTrue(hotel.isRestaurantOpen());
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("22:00:00"));
-        assertEquals(true,hotel.isRestaurantOpen());
+        assertTrue(hotel.isRestaurantOpen());
     }
 
     @Test
     public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){
         Restaurant hotel = Mockito.spy(restaurant);
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("22:30:00"));
-        assertEquals(false,hotel.isRestaurantOpen());
+        assertFalse(hotel.isRestaurantOpen());
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("10:29:59"));
-        assertEquals(false,hotel.isRestaurantOpen());
+        assertFalse(hotel.isRestaurantOpen());
         Mockito.when(hotel.getCurrentTime()).thenReturn(LocalTime.parse("22:00:01"));
-        assertEquals(false,hotel.isRestaurantOpen());
-
+        assertFalse(hotel.isRestaurantOpen());
     }
 
     //<<<<<<<<<<<<<<<<<<<<<<<<<OPEN/CLOSED>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -83,4 +83,24 @@ class RestaurantTest {
                 ()->restaurant.removeFromMenu("French fries"));
     }
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>CALCULATE PRICE<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    @Test
+    public void calculate_price_when_no_item_selected() {
+        ArrayList<String> itemlist=new ArrayList<>();
+        assertEquals(0,restaurant.calculatePriceByItem(itemlist));
+    }
+    @Test
+    public void calculate_price_when_one_item_selected() {
+        ArrayList<String> itemlist=new ArrayList<>();
+        itemlist.add("Sweet corn soup");
+        assertEquals(119,restaurant.calculatePriceByItem(itemlist));
+    }
+    @Test
+    public void calculate_price_when_two_item_selected() {
+        ArrayList<String> itemlist=new ArrayList<>();
+        itemlist.add("Sweet corn soup");
+        itemlist.add("Vegetable lasagne");
+        assertEquals(388,restaurant.calculatePriceByItem(itemlist));
+    }
 }
